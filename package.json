@@ -1,0 +1,19 @@
+{
+  "name": "evntboard-module-obs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EvntBoard/module-obs.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EvntBoard/module-obs/issues"
+  },
+  "homepage": "https://github.com/EvntBoard/module-obs#readme"
+}
