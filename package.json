@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/EvntBoard/module-obs/issues"
   },
-  "homepage": "https://github.com/EvntBoard/module-obs#readme"
+  "homepage": "https://github.com/EvntBoard/module-obs#readme",
+  "dependencies": {
+    "obs-websocket-js": "^4.0.2"
+  }
 }
