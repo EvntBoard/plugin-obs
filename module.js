@@ -115,6 +115,7 @@ class Obs {
 
       this.bus.newEvent({ event: 'obs-load' });
     } catch (e) {
+      console.error(e)
       this.obs = null;
       this.connected = false;
       this.bus.newEvent({ event: 'obs-error' });
@@ -122,11 +123,13 @@ class Obs {
   }
 
   async unload() {
-    if (this.obs) {
+    try {
       this.obs.disconnect();
+      this.connected = false;
+      this.bus.newEvent({event: 'obs-unload'});
+    } catch (e) {
+      console.error(e)
     }
-    this.connected = false;
-    this.bus.newEvent({ event: 'obs-unload' });
   }
 
   async reload() {
