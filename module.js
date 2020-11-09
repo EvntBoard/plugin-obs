@@ -115,6 +115,7 @@ class Obs {
 
       this.bus.newEvent({ event: 'obs-load' });
     } catch (e) {
+      this.obs = null;
       this.connected = false;
       this.bus.newEvent({ event: 'obs-error' });
     }
