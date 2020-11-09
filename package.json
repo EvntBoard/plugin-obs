@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/EvntBoard/module-obs#readme",
   "dependencies": {
+    "joi": "^17.3.0",
     "obs-websocket-js": "^4.0.2"
   }
 }

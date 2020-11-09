@@ -1,15 +1,10 @@
 const moduleOBS = require('./module')
-
-const params = {
-  host: 'string',
-  port: 'number',
-  password: 'string',
-}
+const schema =  require('./schema')
 
 module.exports = {
   evntboard: 'obs',
   name: 'OBS',
   description: 'OBS module',
   module: moduleOBS,
-  params,
+  schema,
 }
