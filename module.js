@@ -13,11 +13,9 @@ class Obs {
   async load() {
     try {
       this.obs = new OBSWebSocket();
-      await this.obs.connect({ address: `${this.host}:${this.port}`, password: this.password });
-
-      this.connected = true;
 
       this.obs.on('ConnectionOpened', () => {
+        this.connected = true
         this.bus.newEvent({event: 'obs-open'});
       })
 
@@ -126,6 +124,8 @@ class Obs {
       });
 
       this.bus.newEvent({ event: 'obs-load' });
+
+      await this.obs.connect({ address: `${this.host}:${this.port}`, password: this.password });
     } catch (e) {
       console.error(e)
       this.obs = null;
