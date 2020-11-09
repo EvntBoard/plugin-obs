@@ -17,6 +17,18 @@ class Obs {
 
       this.connected = true;
 
+      this.obs.on('ConnectionOpened', () => {
+        this.bus.newEvent({event: 'obs-open'});
+      })
+
+      this.obs.on('ConnectionOpened', () => {
+        this.bus.newEvent({event: 'obs-open'});
+      })
+
+      this.obs.on('Exiting', () => {
+        this.unload()
+      })
+
       this.obs.on('SwitchScenes', (data) => {
         this.bus.newEvent({ event: 'obs-switch-scenes', ...data });
       });
