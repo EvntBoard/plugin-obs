@@ -19,8 +19,8 @@ class Obs {
         this.bus.newEvent({event: 'obs-open'});
       })
 
-      this.obs.on('ConnectionOpened', () => {
-        this.bus.newEvent({event: 'obs-open'});
+      this.obs.on('ConnectionClosed', () => {
+        this.bus.newEvent({event: 'obs-close'});
       })
 
       this.obs.on('Exiting', () => {
