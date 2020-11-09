@@ -7,8 +7,8 @@ const params = {
 }
 
 module.exports = {
+  evntboard: 'obs',
   name: 'OBS',
-  type: 'obs',  // this going to be in trigger !
   description: 'OBS module',
   module: moduleOBS,
   params,
