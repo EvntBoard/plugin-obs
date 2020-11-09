@@ -122,7 +122,9 @@ class Obs {
   }
 
   async unload() {
-    this.obs.disconnect();
+    if (this.obs) {
+      this.obs.disconnect();
+    }
     this.connected = false;
     this.bus.newEvent({ event: 'obs-unload' });
   }
