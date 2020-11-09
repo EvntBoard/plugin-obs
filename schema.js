@@ -1,8 +1,8 @@
 const Joi = require('joi')
 
 const schema = Joi.object({
-  host: Joi.string().required(),
-  port: Joi.number().required(),
+  host: Joi.string().hostname().required(),
+  port: Joi.number().port().required(),
   password: Joi.string(),
 })
 
