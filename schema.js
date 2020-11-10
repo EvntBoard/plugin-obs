@@ -1,9 +1,22 @@
-const Joi = require('joi')
+// http://json-schema.org/learn/getting-started-step-by-step.html
 
-const schema = Joi.object({
-  host: Joi.string().hostname().required(),
-  port: Joi.number().port().required(),
-  password: Joi.string().allow('', null),
-})
+const schema = {
+  "type": "object",
+  "properties": {
+    "host": {
+      "description": "Host",
+      "type": "string"
+    },
+    "port": {
+      "description": "Port",
+      "type": "number"
+    },
+    "password": {
+      "description": "Password",
+      "type": "string",
+    }
+  },
+  "required": [ "host", "port" ]
+}
 
 module.exports = schema
