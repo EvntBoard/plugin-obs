@@ -152,375 +152,227 @@ class Obs {
   // Général
 
   async getVersion() {
-    try {
-      return await this.obs.send('GetVersion');
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('GetVersion');
   }
 
   async getStats() {
-    try {
-      return await this.obs.send('GetStats');
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('GetStats');
   }
 
   async getInfo() {
-    try {
-      return await this.obs.send('GetVideoInfo');
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('GetVideoInfo');
   }
 
   // Scenes
 
   async sceneGetCurrent() {
-    try {
-      return await this.obs.send('GetCurrentScene');
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('GetCurrentScene');
   }
 
   async sceneSetCurrent(scene) {
-    try {
-      return await this.obs.send('SetCurrentScene', { 'scene-name': scene });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('SetCurrentScene', { 'scene-name': scene });
   }
 
   // Sources
 
   async sourceGetSettings(source) {
-    try {
-      return await this.obs.send('GetSourceSettings', { sourceName: source });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('GetSourceSettings', { sourceName: source });
   }
 
   async sourceSetSettings(source, settings) {
-    try {
-      return await this.obs.send('SetSourceSettings', {
-        sourceName: source,
-        sourceSettings: settings,
-      });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('SetSourceSettings', {
+      sourceName: source,
+      sourceSettings: settings,
+    });
   }
 
   async sourceGetVolume(source, useDecibel) {
-    try {
-      return await this.obs.send('GetVolume', { source, useDecibel });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('GetVolume', { source, useDecibel });
   }
 
   async sourceSetVolume(source, volume, useDecibel) {
-    try {
-      return await this.obs.send('SetVolume', { source, volume, useDecibel });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('SetVolume', { source, volume, useDecibel });
   }
 
   async sourceGetMute(source) {
-    try {
-      return await this.obs.send('GetMute', { source });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('GetMute', { source });
   }
 
   async sourceSetMute(source, mute) {
-    try {
-      return await this.obs.send('SetMute', { source, mute });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('SetMute', { source, mute });
   }
 
   async sourceMuteToggle(source) {
-    try {
-      return await this.obs.send('ToggleMute', { source });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('ToggleMute', { source });
   }
 
   // text
 
   async textGDIGetSettings(source) {
-    try {
-      return await this.obs.send('GetTextGDIPlusProperties', { source });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('GetTextGDIPlusProperties', { source });
   }
 
   async textGDISetSettings(source, settings) {
-    try {
-      return await this.obs.send('SetTextGDIPlusProperties', { source, ...settings });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('SetTextGDIPlusProperties', { source, ...settings });
   }
 
   async textFreeGetSettings(source) {
-    try {
-      return await this.obs.send('GetTextFreetype2Properties', { source });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('GetTextFreetype2Properties', { source });
   }
 
   async textFreeSetSettings(source, settings) {
-    try {
-      return await this.obs.send('SetTextFreetype2Properties', { source, ...settings });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('SetTextFreetype2Properties', { source, ...settings });
   }
 
   // filter
 
   async filterGetSettings(source, filter) {
-    try {
-      return await this.obs.send('GetSourceFilterInfo', { sourceName: source, filterName: filter });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('GetSourceFilterInfo', { sourceName: source, filterName: filter });
   }
 
   async filterSetSettings(source, filter, settings) {
-    try {
-      return await this.obs.send('SetSourceFilterSettings', {
-        sourceName: source,
-        filterName: filter,
-        filterSettings: settings,
-      });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('SetSourceFilterSettings', {
+      sourceName: source,
+      filterName: filter,
+      filterSettings: settings,
+    });
   }
 
   async filterSetVisibility(source, filter, enable) {
-    try {
-      return await this.obs.send('SetSourceFilterVisibility', {
-        sourceName: source,
-        filterName: filter,
-        filterEnabled: enable,
-      });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('SetSourceFilterVisibility', {
+      sourceName: source,
+      filterName: filter,
+      filterEnabled: enable,
+    });
   }
 
   async filterToggleVisibility(source, filter) {
-    try {
-      const { enabled } = await this.filterGetSettings(source, filter);
-      return await this.filterSetVisibility(source, filter, !enabled);
-    } catch (e) {
-      throw new Error(e);
-    }
+    const { enabled } = await this.filterGetSettings(source, filter);
+    return await this.filterSetVisibility(source, filter, !enabled);
   }
 
   // Scene Items
 
   async sourceItemGetSettings(scene, itemName) {
-    try {
-      return await this.obs.send('GetSceneItemProperties', {
-        'scene-name': scene,
-        item: { name: itemName },
-      });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('GetSceneItemProperties', {
+      'scene-name': scene,
+      item: { name: itemName },
+    });
   }
 
   async sceneItemSetSettings(scene, itemName, settings) {
-    try {
-      return await this.obs.send('SetSceneItemProperties', {
-        'scene-name': scene,
-        item: { name: itemName },
-        position: {},
-        bounds: {},
-        scale: {},
-        crop: {},
-        ...settings,
-      });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('SetSceneItemProperties', {
+      'scene-name': scene,
+      item: { name: itemName },
+      position: {},
+      bounds: {},
+      scale: {},
+      crop: {},
+      ...settings,
+    });
   }
 
   async sourceItemSetVisibility(scene, itemName, visibility) {
-    try {
-      return await this.obs.send('SetSceneItemProperties', {
-        'scene-name': scene,
-        item: { name: itemName },
-        position: {},
-        bounds: {},
-        scale: {},
-        crop: {},
-        visible: visibility,
-      });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('SetSceneItemProperties', {
+      'scene-name': scene,
+      item: { name: itemName },
+      position: {},
+      bounds: {},
+      scale: {},
+      crop: {},
+      visible: visibility,
+    });
   }
 
   async sourceItemVisibilityToggle(scene, itemName) {
-    try {
-      const { visible } = await this.sourceItemGetSettings(scene, itemName);
-      return await this.obs.send('SetSceneItemProperties', {
-        'scene-name': scene,
-        item: { name: itemName },
-        visible: !visible,
-        position: {},
-        bounds: {},
-        scale: {},
-        crop: {},
-      });
-    } catch (e) {
-      throw new Error(e);
-    }
+    const { visible } = await this.sourceItemGetSettings(scene, itemName);
+    return await this.obs.send('SetSceneItemProperties', {
+      'scene-name': scene,
+      item: { name: itemName },
+      visible: !visible,
+      position: {},
+      bounds: {},
+      scale: {},
+      crop: {},
+    });
   }
 
   async sourceItemSetScale(scene, itemName, x, y) {
-    try {
-      return await this.obs.send('SetSceneItemProperties', {
-        'scene-name': scene,
-        item: { name: itemName },
-        scale: { x, y },
-        position: {},
-        bounds: {},
-        crop: {},
-      });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('SetSceneItemProperties', {
+      'scene-name': scene,
+      item: { name: itemName },
+      scale: { x, y },
+      position: {},
+      bounds: {},
+      crop: {},
+    });
   }
 
   async sourceItemSetPosition(scene, itemName, x, y) {
-    try {
-      return await this.obs.send('SetSceneItemProperties', {
-        'scene-name': scene,
-        item: { name: itemName },
-        position: { x, y },
-        bounds: {},
-        scale: {},
-        crop: {},
-      });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('SetSceneItemProperties', {
+      'scene-name': scene,
+      item: { name: itemName },
+      position: { x, y },
+      bounds: {},
+      scale: {},
+      crop: {},
+    });
   }
 
   async sourceItemSetRotation(scene, itemName, rotation) {
-    try {
-      return await this.obs.send('SetSceneItemProperties', {
-        'scene-name': scene,
-        item: { name: itemName },
-        rotation,
-        position: {},
-        bounds: {},
-        scale: {},
-        crop: {},
-      });
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('SetSceneItemProperties', {
+      'scene-name': scene,
+      item: { name: itemName },
+      rotation,
+      position: {},
+      bounds: {},
+      scale: {},
+      crop: {},
+    });
   }
 
   // Streaming
 
   async streamingGetStatus() {
-    try {
-      return await this.obs.send('GetStreamingStatus');
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('GetStreamingStatus');
   }
 
   async streamingToggle() {
-    try {
-      return await this.obs.send('StartStopStreaming');
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('StartStopStreaming');
   }
 
   async streamingStart() {
-    try {
-      return await this.obs.send('StartStreaming', {});
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('StartStreaming', {});
   }
 
   async streamingStop() {
-    try {
-      return await this.obs.send('StopStreaming');
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('StopStreaming');
   }
 
   // Recording
 
   async recordingGetStatus() {
-    try {
-      return await this.obs.send('GetStreamingStatus');
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('GetStreamingStatus');
   }
 
   async recordingToggle() {
-    try {
-      return await this.obs.send('StartStopRecording');
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('StartStopRecording');
   }
 
   async recordingStart() {
-    try {
-      return await this.obs.send('StartRecording');
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('StartRecording');
   }
 
   async recordingStop() {
-    try {
-      return await this.obs.send('StopRecording');
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('StopRecording');
   }
 
   async recordingPause() {
-    try {
-      return await this.obs.send('PauseRecording');
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('PauseRecording');
   }
 
   async recordingResume() {
-    try {
-      return await this.obs.send('ResumeRecording');
-    } catch (e) {
-      throw new Error(e);
-    }
+    return await this.obs.send('ResumeRecording');
   }
 }
 
