@@ -1,13 +1,13 @@
 const OBSWebSocket = require('obs-websocket-js');
 
 class Obs {
-  constructor(options, bus) {
+  constructor(options, { evntBus, logger }) {
     this.host = options.host;
     this.port = options.port;
     this.password = options.password;
-    this.bus = bus;
+    this.evntBus = evntBus;
+    this.logger = logger;
     this.obs = null;
-    this.connected = false;
   }
 
   async load() {
@@ -15,12 +15,11 @@ class Obs {
       this.obs = new OBSWebSocket();
 
       this.obs.on('ConnectionOpened', () => {
-        this.connected = true
-        this.bus.newEvent({event: 'obs-open'});
+        this.evntBus?.newEvent({event: 'obs-open'});
       })
 
       this.obs.on('ConnectionClosed', () => {
-        this.bus.newEvent({event: 'obs-close'});
+        this.evntBus?.newEvent({event: 'obs-close'});
       })
 
       this.obs.on('Exiting', () => {
@@ -28,119 +27,117 @@ class Obs {
       })
 
       this.obs.on('SwitchScenes', (data) => {
-        this.bus.newEvent({ event: 'obs-switch-scenes', ...data });
+        this.evntBus?.newEvent({ event: 'obs-switch-scenes', ...data });
       });
 
       this.obs.on('StreamStarting', (data) => {
-        this.bus.newEvent({ event: 'obs-stream-starting', ...data });
+        this.evntBus?.newEvent({ event: 'obs-stream-starting', ...data });
       });
 
       this.obs.on('StreamStarted', () => {
-        this.bus.newEvent({ event: 'obs-stream-started' });
+        this.evntBus?.newEvent({ event: 'obs-stream-started' });
       });
 
       this.obs.on('StreamStopping', (data) => {
-        this.bus.newEvent({ event: 'obs-stream-stopping', ...data });
+        this.evntBus?.newEvent({ event: 'obs-stream-stopping', ...data });
       });
 
       this.obs.on('StreamStopping', (data) => {
-        this.bus.newEvent({ event: 'obs-stream-stopped', ...data });
+        this.evntBus?.newEvent({ event: 'obs-stream-stopped', ...data });
       });
 
       this.obs.on('StreamStatus', (data) => {
-        this.bus.newEvent({ event: 'obs-stream-status', ...data });
+        this.evntBus?.newEvent({ event: 'obs-stream-status', ...data });
       });
 
       this.obs.on('RecordingStarting', () => {
-        this.bus.newEvent({ event: 'obs-recording-starting' });
+        this.evntBus?.newEvent({ event: 'obs-recording-starting' });
       });
 
       this.obs.on('RecordingStarted', () => {
-        this.bus.newEvent({ event: 'obs-recording-started' });
+        this.evntBus?.newEvent({ event: 'obs-recording-started' });
       });
 
       this.obs.on('RecordingStopping', () => {
-        this.bus.newEvent({ event: 'obs-recording-stopping' });
+        this.evntBus?.newEvent({ event: 'obs-recording-stopping' });
       });
 
       this.obs.on('RecordingStopped', () => {
-        this.bus.newEvent({ event: 'obs-recording-stopped' });
+        this.evntBus?.newEvent({ event: 'obs-recording-stopped' });
       });
 
       this.obs.on('RecordingPaused', () => {
-        this.bus.newEvent({ event: 'obs-recording-paused' });
+        this.evntBus?.newEvent({ event: 'obs-recording-paused' });
       });
 
       this.obs.on('RecordingResumed', () => {
-        this.bus.newEvent({ event: 'obs-recording-resumed' });
+        this.evntBus?.newEvent({ event: 'obs-recording-resumed' });
       });
 
       this.obs.on('SourceCreated', (data) => {
-        this.bus.newEvent({ event: 'obs-source-created', ...data });
+        this.evntBus?.newEvent({ event: 'obs-source-created', ...data });
       });
 
       this.obs.on('SourceDestroyed', (data) => {
-        this.bus.newEvent({ event: 'obs-source-destroyed', ...data });
+        this.evntBus?.newEvent({ event: 'obs-source-destroyed', ...data });
       });
 
       this.obs.on('SourceVolumeChanged', (data) => {
-        this.bus.newEvent({ event: 'obs-source-volume-changed', ...data });
+        this.evntBus?.newEvent({ event: 'obs-source-volume-changed', ...data });
       });
 
       this.obs.on('SourceMuteStateChanged', (data) => {
-        this.bus.newEvent({ event: 'obs-source-mute-changed', ...data });
+        this.evntBus?.newEvent({ event: 'obs-source-mute-changed', ...data });
       });
 
       this.obs.on('SourceRenamed', (data) => {
-        this.bus.newEvent({ event: 'obs-source-renamed', ...data });
+        this.evntBus?.newEvent({ event: 'obs-source-renamed', ...data });
       });
 
       this.obs.on('SourceFilterAdded', (data) => {
-        this.bus.newEvent({ event: 'obs-filter-added', ...data });
+        this.evntBus?.newEvent({ event: 'obs-filter-added', ...data });
       });
 
       this.obs.on('SourceFilterRemoved', (data) => {
-        this.bus.newEvent({ event: 'obs-filter-removed', ...data });
+        this.evntBus?.newEvent({ event: 'obs-filter-removed', ...data });
       });
 
       this.obs.on('SourceFilterVisibilityChanged', (data) => {
-        this.bus.newEvent({ event: 'obs-filter-visibility-changed', ...data });
+        this.evntBus?.newEvent({ event: 'obs-filter-visibility-changed', ...data });
       });
 
       this.obs.on('SceneItemAdded', (data) => {
-        this.bus.newEvent({ event: 'obs-sceneitem-added', ...data });
+        this.evntBus?.newEvent({ event: 'obs-sceneitem-added', ...data });
       });
 
       this.obs.on('SceneItemRemoved', (data) => {
-        this.bus.newEvent({ event: 'obs-sceneitem-removed', ...data });
+        this.evntBus?.newEvent({ event: 'obs-sceneitem-removed', ...data });
       });
 
       this.obs.on('SceneItemVisibilityChanged', (data) => {
-        this.bus.newEvent({ event: 'obs-sceneitem-visibility-changed', ...data });
+        this.evntBus?.newEvent({ event: 'obs-sceneitem-visibility-changed', ...data });
       });
 
       this.obs.on('SceneItemTransformChanged', (data) => {
-        this.bus.newEvent({ event: 'obs-sceneitem-transform-changed', ...data });
+        this.evntBus?.newEvent({ event: 'obs-sceneitem-transform-changed', ...data });
       });
 
-      this.bus.newEvent({ event: 'obs-load' });
+      this.evntBus?.newEvent({ event: 'obs-load' });
 
       await this.obs.connect({ address: `${this.host}:${this.port}`, password: this.password });
     } catch (e) {
-      console.error(e)
+      this.logger.error(e)
       this.obs = null;
-      this.connected = false;
-      this.bus.newEvent({ event: 'obs-error' });
+      this.evntBus?.newEvent({ event: 'obs-error' });
     }
   }
 
   async unload() {
     try {
       this.obs.disconnect();
-      this.connected = false;
-      this.bus.newEvent({event: 'obs-unload'});
+      this.evntBus?.newEvent({event: 'obs-unload'});
     } catch (e) {
-      console.error(e)
+      this.logger.error(e)
     }
   }
 
@@ -375,6 +372,5 @@ class Obs {
     return await this.obs.send('ResumeRecording');
   }
 }
-
 
 module.exports = Obs
