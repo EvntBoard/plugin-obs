@@ -46,9 +46,10 @@ class Obs {
         this.evntBus?.newEvent('obs-stream-stopped', data);
       });
 
-      this.obs.on('StreamStatus', (data) => {
-        this.evntBus?.newEvent('obs-stream-status', data);
-      });
+      // TODO, a debounce ca spam !
+      // this.obs.on('StreamStatus', (data) => {
+      //   this.evntBus?.newEvent('obs-stream-status', data);
+      // });
 
       this.obs.on('RecordingStarting', () => {
         this.evntBus?.newEvent('obs-recording-starting');
