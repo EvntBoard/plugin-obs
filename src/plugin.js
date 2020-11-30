@@ -8,6 +8,7 @@ class Obs {
     this.evntBus = evntBus;
     this.logger = logger;
     this.obs = null;
+    this.connected = false;
   }
 
   async load() {
@@ -15,14 +16,17 @@ class Obs {
       this.obs = new OBSWebSocket();
 
       this.obs.on('ConnectionOpened', () => {
+        this.connected = true;
         this.evntBus?.newEvent('obs-open');
       })
 
       this.obs.on('ConnectionClosed', () => {
+        this.connected = false;
         this.evntBus?.newEvent('obs-close');
       })
 
       this.obs.on('Exiting', () => {
+        this.connected = false;
         this.unload()
       })
 
@@ -46,10 +50,9 @@ class Obs {
         this.evntBus?.newEvent('obs-stream-stopped', data);
       });
 
-      // TODO, a debounce ca spam !
-      // this.obs.on('StreamStatus', (data) => {
-      //   this.evntBus?.newEvent('obs-stream-status', data);
-      // });
+      this.obs.on('StreamStatus', (data) => {
+        this.evntBus?.newEvent('obs-stream-status', data);
+      });
 
       this.obs.on('RecordingStarting', () => {
         this.evntBus?.newEvent('obs-recording-starting');
@@ -135,6 +138,7 @@ class Obs {
 
   async unload() {
     try {
+      this.connected = false;
       this.obs.disconnect();
       this.evntBus?.newEvent('obs-unload');
     } catch (e) {
@@ -150,227 +154,375 @@ class Obs {
   // Général
 
   async getVersion() {
-    return await this.obs.send('GetVersion');
+    if (this.connected) {
+      return await this.obs.send('GetVersion');
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async getStats() {
-    return await this.obs.send('GetStats');
+    if (this.connected) {
+      return await this.obs.send('GetStats');
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async getInfo() {
-    return await this.obs.send('GetVideoInfo');
+    if (this.connected) {
+      return await this.obs.send('GetVideoInfo');
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   // Scenes
 
   async sceneGetCurrent() {
-    return await this.obs.send('GetCurrentScene');
+    if (this.connected) {
+      return await this.obs.send('GetCurrentScene');
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async sceneSetCurrent(scene) {
-    return await this.obs.send('SetCurrentScene', { 'scene-name': scene });
+    if (this.connected) {
+      return await this.obs.send('SetCurrentScene', { 'scene-name': scene });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   // Sources
 
   async sourceGetSettings(source) {
-    return await this.obs.send('GetSourceSettings', { sourceName: source });
+    if (this.connected) {
+      return await this.obs.send('GetSourceSettings', { sourceName: source });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async sourceSetSettings(source, settings) {
-    return await this.obs.send('SetSourceSettings', {
-      sourceName: source,
-      sourceSettings: settings,
-    });
+    if (this.connected) {
+      return await this.obs.send('SetSourceSettings', {
+        sourceName: source,
+        sourceSettings: settings,
+      });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async sourceGetVolume(source, useDecibel) {
-    return await this.obs.send('GetVolume', { source, useDecibel });
+    if (this.connected) {
+      return await this.obs.send('GetVolume', { source, useDecibel });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async sourceSetVolume(source, volume, useDecibel) {
-    return await this.obs.send('SetVolume', { source, volume, useDecibel });
+    if (this.connected) {
+      return await this.obs.send('SetVolume', { source, volume, useDecibel });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async sourceGetMute(source) {
-    return await this.obs.send('GetMute', { source });
+    if (this.connected) {
+      return await this.obs.send('GetMute', { source });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async sourceSetMute(source, mute) {
-    return await this.obs.send('SetMute', { source, mute });
+    if (this.connected) {
+      return await this.obs.send('SetMute', { source, mute });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async sourceMuteToggle(source) {
-    return await this.obs.send('ToggleMute', { source });
+    if (this.connected) {
+      return await this.obs.send('ToggleMute', { source });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   // text
 
   async textGDIGetSettings(source) {
-    return await this.obs.send('GetTextGDIPlusProperties', { source });
+    if (this.connected) {
+      return await this.obs.send('GetTextGDIPlusProperties', { source });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async textGDISetSettings(source, settings) {
-    return await this.obs.send('SetTextGDIPlusProperties', { source, ...settings });
+    if (this.connected) {
+      return await this.obs.send('SetTextGDIPlusProperties', { source, ...settings });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async textFreeGetSettings(source) {
-    return await this.obs.send('GetTextFreetype2Properties', { source });
+    if (this.connected) {
+      return await this.obs.send('GetTextFreetype2Properties', { source });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async textFreeSetSettings(source, settings) {
-    return await this.obs.send('SetTextFreetype2Properties', { source, ...settings });
+    if (this.connected) {
+      return await this.obs.send('SetTextFreetype2Properties', { source, ...settings });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   // filter
 
   async filterGetSettings(source, filter) {
-    return await this.obs.send('GetSourceFilterInfo', { sourceName: source, filterName: filter });
+    if (this.connected) {
+      return await this.obs.send('GetSourceFilterInfo', { sourceName: source, filterName: filter });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async filterSetSettings(source, filter, settings) {
-    return await this.obs.send('SetSourceFilterSettings', {
-      sourceName: source,
-      filterName: filter,
-      filterSettings: settings,
-    });
+    if (this.connected) {
+      return await this.obs.send('SetSourceFilterSettings', {
+        sourceName: source,
+        filterName: filter,
+        filterSettings: settings,
+      });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async filterSetVisibility(source, filter, enable) {
-    return await this.obs.send('SetSourceFilterVisibility', {
-      sourceName: source,
-      filterName: filter,
-      filterEnabled: enable,
-    });
+    if (this.connected) {
+      return await this.obs.send('SetSourceFilterVisibility', {
+        sourceName: source,
+        filterName: filter,
+        filterEnabled: enable,
+      });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async filterToggleVisibility(source, filter) {
-    const { enabled } = await this.filterGetSettings(source, filter);
-    return await this.filterSetVisibility(source, filter, !enabled);
+    if (this.connected) {
+      const { enabled } = await this.filterGetSettings(source, filter);
+      return await this.filterSetVisibility(source, filter, !enabled);
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   // Scene Items
 
   async sourceItemGetSettings(scene, itemName) {
-    return await this.obs.send('GetSceneItemProperties', {
-      'scene-name': scene,
-      item: { name: itemName },
-    });
+    if (this.connected) {
+      return await this.obs.send('GetSceneItemProperties', {
+        'scene-name': scene,
+        item: { name: itemName },
+      });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async sceneItemSetSettings(scene, itemName, settings) {
-    return await this.obs.send('SetSceneItemProperties', {
-      'scene-name': scene,
-      item: { name: itemName },
-      position: {},
-      bounds: {},
-      scale: {},
-      crop: {},
-      ...settings,
-    });
+    if (this.connected) {
+      return await this.obs.send('SetSceneItemProperties', {
+        'scene-name': scene,
+        item: { name: itemName },
+        position: {},
+        bounds: {},
+        scale: {},
+        crop: {},
+        ...settings,
+      });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async sourceItemSetVisibility(scene, itemName, visibility) {
-    return await this.obs.send('SetSceneItemProperties', {
-      'scene-name': scene,
-      item: { name: itemName },
-      position: {},
-      bounds: {},
-      scale: {},
-      crop: {},
-      visible: visibility,
-    });
+    if (this.connected) {
+      return await this.obs.send('SetSceneItemProperties', {
+        'scene-name': scene,
+        item: { name: itemName },
+        position: {},
+        bounds: {},
+        scale: {},
+        crop: {},
+        visible: visibility,
+      });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async sourceItemVisibilityToggle(scene, itemName) {
-    const { visible } = await this.sourceItemGetSettings(scene, itemName);
-    return await this.obs.send('SetSceneItemProperties', {
-      'scene-name': scene,
-      item: { name: itemName },
-      visible: !visible,
-      position: {},
-      bounds: {},
-      scale: {},
-      crop: {},
-    });
+    if (this.connected) {
+      const { visible } = await this.sourceItemGetSettings(scene, itemName);
+      return await this.obs.send('SetSceneItemProperties', {
+        'scene-name': scene,
+        item: { name: itemName },
+        visible: !visible,
+        position: {},
+        bounds: {},
+        scale: {},
+        crop: {},
+      });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async sourceItemSetScale(scene, itemName, x, y) {
-    return await this.obs.send('SetSceneItemProperties', {
-      'scene-name': scene,
-      item: { name: itemName },
-      scale: { x, y },
-      position: {},
-      bounds: {},
-      crop: {},
-    });
+    if (this.connected) {
+      return await this.obs.send('SetSceneItemProperties', {
+        'scene-name': scene,
+        item: { name: itemName },
+        scale: { x, y },
+        position: {},
+        bounds: {},
+        crop: {},
+      });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async sourceItemSetPosition(scene, itemName, x, y) {
-    return await this.obs.send('SetSceneItemProperties', {
-      'scene-name': scene,
-      item: { name: itemName },
-      position: { x, y },
-      bounds: {},
-      scale: {},
-      crop: {},
-    });
+    if (this.connected) {
+      return await this.obs.send('SetSceneItemProperties', {
+        'scene-name': scene,
+        item: { name: itemName },
+        position: { x, y },
+        bounds: {},
+        scale: {},
+        crop: {},
+      });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async sourceItemSetRotation(scene, itemName, rotation) {
-    return await this.obs.send('SetSceneItemProperties', {
-      'scene-name': scene,
-      item: { name: itemName },
-      rotation,
-      position: {},
-      bounds: {},
-      scale: {},
-      crop: {},
-    });
+    if (this.connected) {
+      return await this.obs.send('SetSceneItemProperties', {
+        'scene-name': scene,
+        item: { name: itemName },
+        rotation,
+        position: {},
+        bounds: {},
+        scale: {},
+        crop: {},
+      });
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   // Streaming
 
   async streamingGetStatus() {
-    return await this.obs.send('GetStreamingStatus');
+    if (this.connected) {
+      return await this.obs.send('GetStreamingStatus');
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async streamingToggle() {
-    return await this.obs.send('StartStopStreaming');
+    if (this.connected) {
+      return await this.obs.send('StartStopStreaming');
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async streamingStart() {
-    return await this.obs.send('StartStreaming', {});
+    if (this.connected) {
+      return await this.obs.send('StartStreaming', {});
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async streamingStop() {
-    return await this.obs.send('StopStreaming');
+    if (this.connected) {
+      return await this.obs.send('StopStreaming');
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   // Recording
 
   async recordingGetStatus() {
-    return await this.obs.send('GetStreamingStatus');
+    if (this.connected) {
+      return await this.obs.send('GetStreamingStatus');
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async recordingToggle() {
-    return await this.obs.send('StartStopRecording');
+    if (this.connected) {
+      return await this.obs.send('StartStopRecording');
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async recordingStart() {
-    return await this.obs.send('StartRecording');
+    if (this.connected) {
+      return await this.obs.send('StartRecording');
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async recordingStop() {
-    return await this.obs.send('StopRecording');
+    if (this.connected) {
+      return await this.obs.send('StopRecording');
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async recordingPause() {
-    return await this.obs.send('PauseRecording');
+    if (this.connected) {
+      return await this.obs.send('PauseRecording');
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 
   async recordingResume() {
-    return await this.obs.send('ResumeRecording');
+    if (this.connected) {
+      return await this.obs.send('ResumeRecording');
+    } else {
+      throw new Error('Obs not connected ...')
+    }
   }
 }
 
