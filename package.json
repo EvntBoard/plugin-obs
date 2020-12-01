@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/EvntBoard/module-obs#readme",
   "dependencies": {
-    "obs-websocket-js": "^4.0.2"
+    "obs-websocket-js": "^4.0.2",
+    "throttle-debounce": "^3.0.1"
   }
 }

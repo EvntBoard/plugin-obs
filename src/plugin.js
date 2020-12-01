@@ -1,4 +1,5 @@
 const OBSWebSocket = require('obs-websocket-js');
+const { debounce } = require('throttle-debounce');
 
 class Obs {
   constructor(options, { evntBus, logger }) {
@@ -123,7 +124,7 @@ class Obs {
       });
 
       this.obs.on('SceneItemTransformChanged', (data) => {
-        this.evntBus?.newEvent('obs-sceneitem-transform-changed', data);
+        this.debounceTransform(data)
       });
 
       this.evntBus?.newEvent('obs-load');
@@ -135,6 +136,11 @@ class Obs {
       this.evntBus?.newEvent('obs-error');
     }
   }
+
+  // don't spam EB !!
+  debounceTransform = debounce(2000, (data) => {
+    this.evntBus?.newEvent('obs-sceneitem-transform-changed', data);
+  });
 
   async unload() {
     try {
