@@ -1,5 +1,5 @@
 import OBSWebSocket from 'obs-websocket-js'
-import { debounce } from 'throttle-debounce'
+import {debounce} from 'throttle-debounce'
 import {emitNewEvent} from "./utils";
 
 export class ObsEvntBoard {
@@ -65,23 +65,23 @@ export class ObsEvntBoard {
       });
 
       this.obs.on('RecordingStarted', () => {
-        emitNewEvent('obs-recording-started' );
+        emitNewEvent('obs-recording-started');
       });
 
       this.obs.on('RecordingStopping', () => {
-        emitNewEvent('obs-recording-stopping' );
+        emitNewEvent('obs-recording-stopping');
       });
 
       this.obs.on('RecordingStopped', () => {
-        emitNewEvent('obs-recording-stopped' );
+        emitNewEvent('obs-recording-stopped');
       });
 
       this.obs.on('RecordingPaused', () => {
-        emitNewEvent('obs-recording-paused' );
+        emitNewEvent('obs-recording-paused');
       });
 
       this.obs.on('RecordingResumed', () => {
-        emitNewEvent('obs-recording-resumed' );
+        emitNewEvent('obs-recording-resumed');
       });
 
       this.obs.on('SourceCreated', (data) => {
@@ -93,7 +93,7 @@ export class ObsEvntBoard {
       });
 
       this.obs.on('SourceVolumeChanged', (data) => {
-        emitNewEvent('obs-source-volume-changed', data);
+        this.debounceVolumeChange(data);
       });
 
       this.obs.on('SourceMuteStateChanged', (data) => {
@@ -134,7 +134,7 @@ export class ObsEvntBoard {
 
       emitNewEvent('obs-load');
 
-      await this.obs.connect({ address: `${this.host}:${this.port}`, password: this.password });
+      await this.obs.connect({address: `${this.host}:${this.port}`, password: this.password});
     } catch (e) {
       console.error(e)
       this.obs = null;
@@ -143,8 +143,13 @@ export class ObsEvntBoard {
   }
 
   // don't spam EB !!
-  debounceTransform = debounce(2000, (data) => {
+  debounceTransform = debounce(500, (data) => {
     emitNewEvent('obs-sceneitem-transform-changed', data);
+  });
+
+  // don't spam EB !!
+  debounceVolumeChange = debounce(500, (data) => {
+    emitNewEvent('obs-source-volume-changed', data);
   });
 
   async unload() {
@@ -200,7 +205,7 @@ export class ObsEvntBoard {
 
   async sceneSetCurrent(scene) {
     if (this.connected) {
-      return await this.obs.send('SetCurrentScene', { 'scene-name': scene });
+      return await this.obs.send('SetCurrentScene', {'scene-name': scene});
     } else {
       throw new Error('Obs not connected ...')
     }
@@ -210,7 +215,7 @@ export class ObsEvntBoard {
 
   async sourceGetSettings(source) {
     if (this.connected) {
-      return await this.obs.send('GetSourceSettings', { sourceName: source });
+      return await this.obs.send('GetSourceSettings', {sourceName: source});
     } else {
       throw new Error('Obs not connected ...')
     }
@@ -229,7 +234,7 @@ export class ObsEvntBoard {
 
   async sourceGetVolume(source, useDecibel) {
     if (this.connected) {
-      return await this.obs.send('GetVolume', { source, useDecibel });
+      return await this.obs.send('GetVolume', {source, useDecibel});
     } else {
       throw new Error('Obs not connected ...')
     }
@@ -237,7 +242,7 @@ export class ObsEvntBoard {
 
   async sourceSetVolume(source, volume, useDecibel) {
     if (this.connected) {
-      return await this.obs.send('SetVolume', { source, volume, useDecibel });
+      return await this.obs.send('SetVolume', {source, volume, useDecibel});
     } else {
       throw new Error('Obs not connected ...')
     }
@@ -245,7 +250,7 @@ export class ObsEvntBoard {
 
   async sourceGetMute(source) {
     if (this.connected) {
-      return await this.obs.send('GetMute', { source });
+      return await this.obs.send('GetMute', {source});
     } else {
       throw new Error('Obs not connected ...')
     }
@@ -253,7 +258,7 @@ export class ObsEvntBoard {
 
   async sourceSetMute(source, mute) {
     if (this.connected) {
-      return await this.obs.send('SetMute', { source, mute });
+      return await this.obs.send('SetMute', {source, mute});
     } else {
       throw new Error('Obs not connected ...')
     }
@@ -261,7 +266,7 @@ export class ObsEvntBoard {
 
   async sourceMuteToggle(source) {
     if (this.connected) {
-      return await this.obs.send('ToggleMute', { source });
+      return await this.obs.send('ToggleMute', {source});
     } else {
       throw new Error('Obs not connected ...')
     }
@@ -271,7 +276,7 @@ export class ObsEvntBoard {
 
   async textGDIGetSettings(source) {
     if (this.connected) {
-      return await this.obs.send('GetTextGDIPlusProperties', { source });
+      return await this.obs.send('GetTextGDIPlusProperties', {source});
     } else {
       throw new Error('Obs not connected ...')
     }
@@ -279,7 +284,7 @@ export class ObsEvntBoard {
 
   async textGDISetSettings(source, settings) {
     if (this.connected) {
-      return await this.obs.send('SetTextGDIPlusProperties', { source, ...settings });
+      return await this.obs.send('SetTextGDIPlusProperties', {source, ...settings});
     } else {
       throw new Error('Obs not connected ...')
     }
@@ -287,7 +292,7 @@ export class ObsEvntBoard {
 
   async textFreeGetSettings(source) {
     if (this.connected) {
-      return await this.obs.send('GetTextFreetype2Properties', { source });
+      return await this.obs.send('GetTextFreetype2Properties', {source});
     } else {
       throw new Error('Obs not connected ...')
     }
@@ -295,7 +300,7 @@ export class ObsEvntBoard {
 
   async textFreeSetSettings(source, settings) {
     if (this.connected) {
-      return await this.obs.send('SetTextFreetype2Properties', { source, ...settings });
+      return await this.obs.send('SetTextFreetype2Properties', {source, ...settings});
     } else {
       throw new Error('Obs not connected ...')
     }
@@ -305,7 +310,7 @@ export class ObsEvntBoard {
 
   async filterGetSettings(source, filter) {
     if (this.connected) {
-      return await this.obs.send('GetSourceFilterInfo', { sourceName: source, filterName: filter });
+      return await this.obs.send('GetSourceFilterInfo', {sourceName: source, filterName: filter});
     } else {
       throw new Error('Obs not connected ...')
     }
@@ -337,7 +342,7 @@ export class ObsEvntBoard {
 
   async filterToggleVisibility(source, filter) {
     if (this.connected) {
-      const { enabled } = await this.filterGetSettings(source, filter);
+      const {enabled} = await this.filterGetSettings(source, filter);
       return await this.filterSetVisibility(source, filter, !enabled);
     } else {
       throw new Error('Obs not connected ...')
@@ -350,7 +355,7 @@ export class ObsEvntBoard {
     if (this.connected) {
       return await this.obs.send('GetSceneItemProperties', {
         'scene-name': scene,
-        item: { name: itemName },
+        item: {name: itemName},
       });
     } else {
       throw new Error('Obs not connected ...')
@@ -361,7 +366,7 @@ export class ObsEvntBoard {
     if (this.connected) {
       return await this.obs.send('SetSceneItemProperties', {
         'scene-name': scene,
-        item: { name: itemName },
+        item: {name: itemName},
         position: {},
         bounds: {},
         scale: {},
@@ -377,7 +382,7 @@ export class ObsEvntBoard {
     if (this.connected) {
       return await this.obs.send('SetSceneItemProperties', {
         'scene-name': scene,
-        item: { name: itemName },
+        item: {name: itemName},
         position: {},
         bounds: {},
         scale: {},
@@ -391,10 +396,10 @@ export class ObsEvntBoard {
 
   async sourceItemVisibilityToggle(scene, itemName) {
     if (this.connected) {
-      const { visible } = await this.sourceItemGetSettings(scene, itemName);
+      const {visible} = await this.sourceItemGetSettings(scene, itemName);
       return await this.obs.send('SetSceneItemProperties', {
         'scene-name': scene,
-        item: { name: itemName },
+        item: {name: itemName},
         visible: !visible,
         position: {},
         bounds: {},
@@ -410,8 +415,8 @@ export class ObsEvntBoard {
     if (this.connected) {
       return await this.obs.send('SetSceneItemProperties', {
         'scene-name': scene,
-        item: { name: itemName },
-        scale: { x, y },
+        item: {name: itemName},
+        scale: {x, y},
         position: {},
         bounds: {},
         crop: {},
@@ -425,8 +430,8 @@ export class ObsEvntBoard {
     if (this.connected) {
       return await this.obs.send('SetSceneItemProperties', {
         'scene-name': scene,
-        item: { name: itemName },
-        position: { x, y },
+        item: {name: itemName},
+        position: {x, y},
         bounds: {},
         scale: {},
         crop: {},
@@ -440,7 +445,7 @@ export class ObsEvntBoard {
     if (this.connected) {
       return await this.obs.send('SetSceneItemProperties', {
         'scene-name': scene,
-        item: { name: itemName },
+        item: {name: itemName},
         rotation,
         position: {},
         bounds: {},
